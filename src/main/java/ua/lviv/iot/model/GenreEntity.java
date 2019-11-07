@@ -1,18 +1,31 @@
 package ua.lviv.iot.model;
 
+import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "genre", schema = "film_db")
 public class GenreEntity {
     private int id;
     private String name;
+    private List<FilmEntity> films = new LinkedList<>();
 
     public GenreEntity() {
     }
 
     public GenreEntity(String name) {
         this.name = name;
+
+        Session session = new Configuration().configure().buildSessionFactory().openSession();
+        Query query = session.createQuery("SELECT filmId FROM FilmGenreEntity AS fg WHERE fg.genreId = :id");
+        query.setParameter("id", this.id);
+        this.films = query.list();
+        session.close();
     }
 
     @Id
@@ -33,6 +46,15 @@ public class GenreEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @ManyToMany(mappedBy = "genres")
+    public List<FilmEntity> getFilms() {
+        return this.films;
+    }
+
+    public void setFilms(List<FilmEntity> films) {
+        this.films = films;
     }
 
     @Override

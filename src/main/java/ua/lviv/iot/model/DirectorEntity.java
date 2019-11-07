@@ -1,6 +1,12 @@
 package ua.lviv.iot.model;
 
+import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "director", schema = "film_db")
@@ -8,6 +14,7 @@ public class DirectorEntity {
     private int id;
     private String firstName;
     private String lastName;
+    private List<FilmEntity> films = new LinkedList<>();
 
     public DirectorEntity() {
     }
@@ -15,6 +22,12 @@ public class DirectorEntity {
     public DirectorEntity(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+
+        Session session = new Configuration().configure().buildSessionFactory().openSession();
+        Query query = session.createQuery("SELECT filmId FROM FilmDirectorEntity AS fd WHERE fd.directorId = :id");
+        query.setParameter("id", this.id);
+        films = query.list();
+        session.close();
     }
 
     @Id
@@ -46,6 +59,16 @@ public class DirectorEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    @ManyToMany(mappedBy = "directors")
+    public List<FilmEntity> getFilms() {
+        return this.films;
+    }
+
+    public void setFilms(List<FilmEntity> films) {
+        this.films = films;
+    }
+
 
     @Override
     public boolean equals(Object o) {

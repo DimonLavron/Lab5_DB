@@ -5,7 +5,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import ua.lviv.iot.model.FilmEntity;
 import ua.lviv.iot.model.GenreEntity;
+
+import java.util.List;
 
 public class GenreDAO implements GeneralDAO<GenreEntity> {
     private static SessionFactory sessionFactory;
@@ -61,5 +64,10 @@ public class GenreDAO implements GeneralDAO<GenreEntity> {
 
     public void print(GenreEntity entity) {
         System.out.println("Genre " + entity.getId() + ": " + entity.getName());
+        System.out.println("Films with this genre:");
+        List<FilmEntity> filmEntityList = entity.getFilms();
+        for (FilmEntity obj : filmEntityList) {
+            System.out.println(obj.getTitle());
+        }
     }
 }

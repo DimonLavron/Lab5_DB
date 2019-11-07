@@ -5,9 +5,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import ua.lviv.iot.model.DirectorEntity;
 import ua.lviv.iot.model.FilmEntity;
+import ua.lviv.iot.model.GenreEntity;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class FilmDAO implements GeneralDAO<FilmEntity> {
     private static SessionFactory sessionFactory;
@@ -66,5 +69,17 @@ public class FilmDAO implements GeneralDAO<FilmEntity> {
                 ":\nTitle: " + entity.getTitle() +
                 "\nRunning time: " + entity.getRunningTime() + " mins\nRelease date: " +
                 new SimpleDateFormat("dd.MM.yyyy").format(entity.getReleaseDate()));
+
+        System.out.println("Film directors:");
+        List<DirectorEntity> directorEntityList = entity.getDirectors();
+        for (DirectorEntity obj : directorEntityList) {
+            System.out.println(obj.getFirstName() + " " + obj.getLastName());
+        }
+
+        System.out.println("Film genres:");
+        List<GenreEntity> genreEntityList = entity.getGenres();
+        for (GenreEntity obj : genreEntityList) {
+            System.out.println(obj.getName());
+        }
     }
 }

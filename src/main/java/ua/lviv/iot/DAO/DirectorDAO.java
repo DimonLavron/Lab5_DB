@@ -6,6 +6,9 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import ua.lviv.iot.model.DirectorEntity;
+import ua.lviv.iot.model.FilmEntity;
+
+import java.util.List;
 
 
 public class DirectorDAO implements GeneralDAO<DirectorEntity> {
@@ -64,5 +67,10 @@ public class DirectorDAO implements GeneralDAO<DirectorEntity> {
         System.out.println("Director " + entity.getId() +
                 ":\nFirst name: " + entity.getFirstName() +
                 "\nLast name: " + entity.getLastName());
+        System.out.println("Directed films:");
+        List<FilmEntity> filmEntityList = entity.getFilms();
+        for (FilmEntity obj : filmEntityList) {
+            System.out.println(obj.getTitle());
+        }
     }
 }
